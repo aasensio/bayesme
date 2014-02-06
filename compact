@@ -1,0 +1,1 @@
+tar cvfz bayesme`date '+%d%b%y'`_full.tar.gz * --exclude '.*' --exclude compact* --exclude *.tar.gz

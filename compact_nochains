@@ -1,0 +1,1 @@
+tar cvfz bayesme`date '+%d%b%y'`_compact.tar.gz * --exclude '.*' --exclude compact* --exclude 'MARKOVCHAINS/*' --exclude '*.tar.gz'

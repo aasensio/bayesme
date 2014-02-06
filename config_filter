@@ -1,0 +1,72 @@
+# --------- Markov Chain parameters ------------
+# Sample magnetic field uniformly in vector (B and theta)
+0 0
+# Calculate posterior for combinations of parameters
+1
+# Write the number of variables, the variables and the function
+2 
+'B1' 'theta1'
+'B1*cos(theta1*3.1415927/180.0)'
+
+# --------- Observations and lines -------------
+# File with the observations
+'OBSERVATIONS/imax_sample.per'
+# File with the definition of the filters
+'OBSERVATIONS/FILTERS/imax.filters'
+# File with the stray-light contamination (if applied)
+'stray_light.per'
+# File with the output chain
+'MARKOVCHAINS/testfilter'
+# Stokes parameters' Weights
+1d0 1d0 1d0 1d0
+# Number of lines
+1
+# Atomic parameters file (maximum 10 characters)        
+lines
+# Which line to synthesize (ZE/HF and the index. Repeat for each line)
+ZE
+3
+# mu angle
+1.d0
+# Number of components
+1
+
+# ---------- Components ------------------------
+# Component 1 - INDEX, INVERT (0/1), INITIAL VALUE, MINIMUM, MAXIMUM
+
+# Magnetic field (Gauss)         
+1 1000.0  0.d0  3000.d0
+# Inclination 
+1 20.0   0.d0  180.d0
+# Azimuth
+1 45.d0  0.d0  360.d0
+# Doppler broadening (in Angstroms) 
+1 0.02d0   0.01d0  0.08d0
+# Macroscopic velocity (in km/s)
+1 0.0d0  -5.0d0  5.d0
+# Damping (in Angstroms)
+0 0.0d0   0.d0   0.2d0
+# Value of B1/Bo (source function gradient)  
+1 4.0  0.d0 40.d0
+# Line strength eta (one value per line)
+1 8.5   0.0d0  40.0d0
+# Filling factor (<0 if stray-light is used)
+0 1.0d0 0.d0 1.d0
+
+# ---------- Components ------------------------
+# Component 1 - INDEX, INVERT (0/1), INITIAL VALUE, MINIMUM, MAXIMUM
+
+# Magnetic field (Gauss)         
+1 0.0  0.d0  3000.d0
+# Inclination 
+1 30.0   0.d0  180.d0
+# Azimuth
+1 45.d0  0.d0  180.d0
+# Doppler broadening (in Angstroms) 
+1 0.03d0   0.01d0  0.08d0
+# Macroscopic velocity (in km/s)
+1 0.0d0  -5.0d0  5.d0
+# Damping (in Angstroms)
+0 0.0d0   0.d0   0.1d0
+# Filling factor (<0 if stray-light is used)
+1 0.2d0 0.d0 1.d0

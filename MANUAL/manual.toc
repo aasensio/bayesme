@@ -1,0 +1,8 @@
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}Uncompressing and compiling \textsc {BayesME}}{4}
+\contentsline {section}{\numberline {3}Configuration files}{5}
+\contentsline {subsection}{\numberline {3.1}Standard \textsc {BayesME}}{5}
+\contentsline {subsection}{\numberline {3.2}\textsc {BayesME}\ for filter-polarimeters}{8}
+\contentsline {subsection}{\numberline {3.3}\textsc {BayesME}\ for Milne-Eddington microstructured atmospheres}{8}
+\contentsline {section}{\numberline {4}Running the code}{9}
+\contentsline {section}{\numberline {5}Output}{9}

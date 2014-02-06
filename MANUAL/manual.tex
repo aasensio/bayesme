@@ -1,0 +1,429 @@
+\documentclass[12pt]{article}
+\usepackage{natbib}
+% \usepackage[hypertex]{hyperref}
+\usepackage{bm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+
+
+\oddsidemargin 0.0mm
+\evensidemargin 0.0mm
+\textwidth 160mm
+\topmargin -10mm
+\textheight 230mm
+% \pagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\threej}[6]
+{ \left(\begin{array}{ccc}
+#1&#2&#3\\
+#4&#5&#6
+\end{array}\right) }
+
+\newcommand{\sixj}[6]
+{ \left\{\begin{array}{ccc}
+#1&#2&#3\\
+#4&#5&#6
+\end{array}\right\} }
+
+\def\separation {0.5cm}
+\def\ion#1#2  {#1\,{\small {#2}} }
+\def\B{\textsc{BayesME}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% For generation of the HTML manual with tth:
+% \def\tthdump#1{#1}      % For generating TeX source; ignored by tth
+% Redefine symbols problematic for the browser:
+%%tth:\def\ga{\hbox{$>\sim$}}
+%%tth:\def\la{\hbox{$<\sim$}}
+%%tth:\def\Mo{\hbox{$M_o$}}
+%%tth:\def\Lo{\hbox{$L_o$}}
+%%tth:\def\Mdot{\hbox{$M^{dot}$}}
+%%tth:\def\Ivezic{Ivezic}
+
+%%tth:\begin{html}<TITLE>User Manual for MOLPOP-CEP</TITLE>\end{html}
+%%tth: This HTML file was generated from the TeX source by
+%%tth: the translator TTH, which uses symbol fonts.  These fonts are
+%%tth: not normally enabled for Netscape running under X, because of
+%%tth: the way Netscape groups its fonts. If your browser has problems
+%%tth: displaying the math symbols in this manual, an easy fix can be found
+%%tth: on the TTH website at
+%%tth:\begin{html}<A HREF="http://hutchinson.belmont.ma.us/tth/Xfonts.html">http://hutchinson.belmont.ma.us/tth/Xfonts.html</A>\end{html}
+%%tth:\begin{html}<HR>\end{html}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title                  {\sc User Manual for \B}
+
+\author{ A. Asensio Ramos, M. J. Mart\'{\i}nez Gonz\'alez, J. A. Rubi\~no Mart\'{\i}n\\\\\\
+         Instituto de Astrof\'{\i}sica de Canarias\\
+         38205, La Laguna, Tenerife, Spain\\\\
+        \\[0.5in] \today}
+\date{}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section*{Disclaimer}
+
+This software is distributed ``as is'' and the authors do not take any responsability for
+possible errors derived from its use by others. Apply it with care and
+never trust the output without a careful meditation. \B\ can be freely used
+provided that its origin is properly acknowledged and the reference Asensio Ramos, Mart\'{\i}nez
+Gonz\'alez \& Rubi\~no Mart\'{\i}n (2007; A\&A, 476, 959) is cited and acknowledged in any
+publication achieved with it. Before using \B\ we recommend the user to read carefully this
+paper. Please, 
+send us bug reports, comments and suggestions of possible improvements.
+We point out that \B\ will be improved over the years, but it is now ready for a number of
+interesting applications.
+
+\section*{License}
+\emph{This software is Copyright 2010 Andr\'es Asensio Ramos, Mar\'{\i}a Jes\'us
+Mart\'{\i}nez Gonz\'alez \& Jose Alberto Rubi\~no Mart\'{\i}n. The software
+may be used for experimental and research purposes only. Commercial use is
+not permitted without prior agreement of the Copyright holders. The
+software may be shared or distributed under the same restrictions, provided
+all such users are made aware of this agreement. The software may not be
+sold in whole or within part of a larger software product, whether in
+source or binary forms.}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+\B\ is a computer program for doing Bayesian inference on the
+parameters of the Milne-Eddington model for the interpretation of
+Stokes profiles. The standard version is appropriate for spectro-polarimetric
+data. There are additional versions for doing inference with a 
+microstructured Milne-Eddington atmosphere and another one for dealing
+with filter-polarimeter data. The code is written in standard Fortran 90, with small IDL
+scripts for analyzing the output. The code relies on some LAPACK routines that
+are supplied in the \texttt{LAPACK} directory and on the Multinest v2.7 sampling
+method supplied in the \texttt{NESTED} directory\footnote{http://www.mrao.cam.ac.uk/software/multinest/}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Uncompressing and compiling \B}
+
+The package comes in a single compressed file \texttt{bayesme\_ddmmmyy.tar.gz}, where
+the version is indicated with the date of the package. After
+unpacking with 
+\begin{verbatim}
+tar zxvf bayesme_ddmmmyy.tar.gz, 
+\end{verbatim}
+the \B\ directory
+will contain the following subdirectories:
+
+\begin{enumerate}
+\item
+{\tt Source} contains the Fortran 90 sources and a makefile that can be used
+to build the binary file.
+\item
+{\tt Source\_filter} contains the Fortran 90 sources of the filter-polarimeter version and a makefile that can be used
+to build the binary file.
+\item
+{\tt Source\_misma} contains the Fortran 90 sources of the microstructured atmosphere version and a makefile that can be used
+to build the binary file.
+\item
+{\tt OBSERVATIONS} contains the observations and the definition of the filter
+positions for the filter-polarimetry version.
+\item
+{\tt MARKOVCHAINS} contains the results of the sampling process for doing
+Bayesian inference.
+\item
+{\tt MANUAL} contains this manual. 
+\end{enumerate}
+
+The code has been tested on Linux platforms using the Intel Fortran
+Compiler (\texttt{ifort}). The compilation 
+of the F90 code (in directory \texttt{FORTRAN}) is performed
+with the supplied \texttt{makefile}. It is quite simple and easy to modify, and
+contains additional comments about compiling. The
+default compiler is the \texttt{ifort}, although you can try to use any other
+compiler through the variable \texttt{COMPILER}. In order to obtain the executable file, just type:
+\begin{verbatim}
+       make all
+\end{verbatim}
+in the directory \texttt{FORTRAN} of \B. After compiling and linking, the executable is copied to the root directory of
+\B.
+
+The generated object and module files can be cleaned typing:
+\begin{verbatim}
+       make clean
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Configuration files}
+\subsection{Standard \B}
+Here we describe the input configuration file line by line. The example
+is the file \texttt{config}.
+
+\begin{verbatim}
+# Sample magnetic field uniformly in vector (B and theta)
+0 0
+\end{verbatim}
+These two numbers are set to 0 if you want to sample the magnetic field
+strength and the inclination uniformly. In other words, these define the
+priors over these variables. It is customary to set them to 0.
+
+\begin{verbatim}
+# Calculate posterior for combinations of parameters
+1
+\end{verbatim}
+Once the sampling has been carried out, if you want to calculate
+the posterior for a derived quantity, these lines indicate which
+combination. For instance, if you want to calculate the magnetic
+flux density.
+
+\begin{verbatim}
+# Write the number of variables, the variables and the function
+3 
+\end{verbatim}
+Number of model parameters on which the derived quantity depends on.
+
+\begin{verbatim}
+'alpha1' 'B1' 'theta1'
+'alpha1*B1*cos(theta1*3.1415927/180.0)'
+\end{verbatim}
+You define the parameters in the first line separated by spaces
+and the derived quantity in the second line. This formula will
+be parsed by the code.
+
+\begin{verbatim}
+# --------- Observations and lines -------------
+# File with the observations
+'test.per'
+\end{verbatim}
+File with the observations. This file consists of a first line with the number of
+wavelength points. Then, each line consists of: wavelength in \AA\, the Stokes
+parameters $I/I_c$, $Q/I_c$, $U/I_c$, $V/I_c$, and the standard deviation of the
+noise associated with each Stokes parameter and at each wavelength. Examples of
+these files can be found in the directory \texttt{OBSERVATIONS}.
+
+\begin{verbatim}
+# File with the stray-light contamination (if applied)
+'stray_light.per'
+\end{verbatim}
+File that contains the stray-light profile if used. This file is exactly like an
+observation but with the four columns for the noise missing.
+
+\begin{verbatim}
+# File with the output chain
+'MARKOVCHAINS/test'
+\end{verbatim}
+All the output will start with this name and some extensions will be added to
+indicate different outputs.
+
+\begin{verbatim}
+# Stokes parameters' Weights
+1d0 1d0 1d0 1d0
+\end{verbatim}
+If you want to weight a Stokes parameter more than another, do it here. However,
+this is not the Bayesian way to proceed since this is equivalent to increasing
+or decreasing the noise associated with the Stokes parameter and you have
+to find a justification for that.
+
+\begin{verbatim}
+# Number of lines
+2
+\end{verbatim}
+Number of spectral lines to consider.
+
+\begin{verbatim}
+# Atomic parameters file (maximum 10 characters)        
+lines
+\end{verbatim}
+File with the atomic information. The file is self-explaining.
+
+\begin{verbatim}
+# Which line to synthesize (ZE/HF and the index. Repeat for each line)
+ZE
+0
+ZE
+1
+\end{verbatim}
+Lines to include from the file. The first string indicates if the line is
+treated in the Zeeman regime or including hyperfine structure. At the moment,
+only the Zeeman option is available. The second line indicates the index
+of the line in the file indicated in the line before.
+
+\begin{verbatim}
+# mu angle
+1.d0
+\end{verbatim}
+Cosine of the heliocentrinc angle.
+
+\begin{verbatim}
+# Number of components
+2
+\end{verbatim}
+Number of Milne-Eddington components to use.
+
+\begin{verbatim}
+
+# ---------- Components ------------------------
+# Component 1 - INDEX, INVERT (0/1), INITIAL VALUE, MINIMUM, MAXIMUM
+
+# Magnetic field (Gauss)         
+1 1000.0  0.d0  3000.d0
+# Inclination 
+1 20.0   0.d0  180.d0
+# Azimuth
+1 45.d0  0.d0  360.d0
+# Doppler broadening (in Angstroms) 
+1 0.02d0   0.01d0  0.08d0
+# Macroscopic velocity (in km/s)
+1 0.0d0  -5.0d0  5.d0
+# Damping (in Angstroms)
+1 0.0d0   0.d0   0.2d0
+# Value of B1/Bo (source function gradient)  
+1 4.0  0.d0 40.d0
+# Line strength eta (one value per line)
+1 8.5   0.0d0  40.0d0
+1 8.5   0.d0   40.d0
+# Filling factor (<0 if stray-light is used)
+1 0.8d0 0.d0 1.d0
+
+# ---------- Components ------------------------
+# Component 1 - INDEX, INVERT (0/1), INITIAL VALUE, MINIMUM, MAXIMUM
+
+# Magnetic field (Gauss)         
+0 0.0  0.d0  3000.d0
+# Inclination 
+0 30.0   0.d0  180.d0
+# Azimuth
+0 45.d0  0.d0  180.d0
+# Doppler broadening (in Angstroms) 
+0 0.03d0   0.01d0  0.08d0
+# Macroscopic velocity (in km/s)
+1 0.0d0  -5.0d0  5.d0
+# Damping (in Angstroms)
+0 0.0d0   0.d0   0.1d0
+# Value of B1/Bo (source function gradient)  
+0 2.0  0.d0 40.d0
+# Line strength eta (one value per line)
+0 10.5   0.0d0  40.d0
+0 10.5   0.0d0  40.d0
+# Filling factor (<0 if stray-light is used)
+1 -0.2d0 0.d0 1.d0
+\end{verbatim}
+These lines describe the model atmospheres. In this case, two components are used.
+Each line presents the following information: i) 0/1 to indicate if the parameter
+is kept fixed or you want to infer its value, ii) value of the parameter, which is
+only used if it is fixed, iii) two numbers indicating the range of variation of
+the parameter. Uniform priors are assumed for all parameters truncated to the
+range provided in these lines. Make sure that the value provided for all parameters
+is inside the range of variation. If not, the code might give strange results.
+If you want to infer the filling factor of the components, remember to use
+values that add up to 1. If you want the last component to be a stray-light
+contamination read from a file, use a negative number like in the example (you can
+also infer the Doppler velocity of this component). If you want a normal
+Milne-Eddington component, use a positive number.
+
+\subsection{\B\ for filter-polarimeters}
+The configuration file is now \texttt{config\_filter}. There is
+only a difference with the previous configuration file. After configuring
+the file with the observations, you will find the following lines:
+
+\begin{verbatim}
+# File with the definition of the filters
+'OBSERVATIONS/FILTERS/imax.filters'
+\end{verbatim}
+This indicates the file that contains the filters to be applied for synthesizing
+the observations. The file contains: i) two lines of comments, ii) the number of
+filters and the number of wavelengths on which they are defined, iii) another comment
+line, iv) the positions in wavelength of the filters (central wavelength if you want),
+v) another comment and vi) lines with the wavelength and the transmission of each
+filter normalized to unit area.
+
+\subsection{\B\ for Milne-Eddington microstructured atmospheres}
+This option is still under development and has not been fully tested.
+Use it at your own risk. The configuration file is now \texttt{config\_misma}. The
+differences come now on the definition of the model parameters. There is an
+additional line at the beginning of each component, indicating if the
+component is optically thick or optically thin:
+
+\begin{verbatim}
+# Optically thin (index of component to which it is associated) or not (0)
+0
+\end{verbatim}
+If the value is 0, the definition of the atmosphere is exactly like in the
+standard code. If it is $n>0$, the component is optically thin and associated
+to component $n$ defined before. If this is the case, this component shares
+the thermodynamical parameters with component $n$ and the definition only needs
+
+\begin{verbatim}
+# Magnetic field (Gauss)
+1 0.0  0.d0  3000.d0
+# Inclination
+1 30.0   0.d0  180.d0
+# Azimuth
+1 45.d0  0.d0  180.d0
+# Doppler broadening (in Angstroms)
+1 0.03d0   0.01d0  0.08d0
+# Macroscopic velocity (in km/s)
+1 0.0d0  -5.0d0  5.d0
+# Damping (in Angstroms)
+0 0.0d0   0.d0   0.1d0
+# Filling factor (<0 if stray-light is used)
+1 0.2d0 0.d0 1.d0
+\end{verbatim}
+The filling factor of this component is the internal one with component $n$.
+
+\section{Running the code}
+The code is run with the following lines, depending on the code you want
+to use:
+\begin{verbatim}
+./bayesme config
+./bayesme_filter config_filter
+./bayesme_misma config_misma
+\end{verbatim}
+
+\section{Output}
+The output is organized in several files, some of them are of
+interest. Others are just temporal files or non-interesting files
+for you. For instance if the \texttt{test} root is used,
+we will find:
+\begin{itemize}
+\item \texttt{test.params\_inverted}. A list of the parameters over which inference has been carried out.
+\item \texttt{test.stokes\_map}. The Stokes parameters synthesized at the value of the parameters that
+maximize the posterior distribution. This is the so-called maximum a-posteriori (MAP) solution and
+should be equivalent to the least-squares solution obtained with standard codes.
+\item \texttt{testpost\_equal\_weights.dat}. This file contains samples of the posterior for all
+parameters, plus the likelihood associated with it. Almost all information present in the
+rest of files can be extracted from this samples.
+\item \texttt{test.hist1D}. This file contains the marginal posteriors for the parameters, plus
+those of the derived quantities. The first line indicates the number of histograms of
+model parameters and the number of histograms of derived quantities. For each posterior,
+you will find an index and the number of bins. Then, the following three columns contain
+the bins and the histograms, with the second being a Gaussian-smoothed version of the 
+third column, which is just the plain histogram.
+\item \texttt{test.confidence}. This file contains, for each parameter, the median of each marginal 
+posterior, together with 68\% and 95\% confidence intervals. Finally, the MAP value of
+the parameter is also shown.
+\item \texttt{test.percentiles}. Different percentiles of each marginal posterior.
+\item \texttt{teststats.dat}. This file contains an estimation of the evidence and the
+total number of high-probability regions found, together with some information
+about each one.
+\end{itemize}
+
+\section*{Acknowledgements}
+Finantial support by
+the Spanish Ministry of Education and Science through projects AYA2007-63881, AYA2007-67965-C03-01 and
+the European Commission through the SOLAIRE network (MTRN-CT-2006-035484) are gratefully acknowledged. 
+
+% \bibliographystyle{apj}
+% \bibliography{/home/aasensio/Dropbox/biblio}
+
+\end{document}

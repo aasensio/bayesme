@@ -1,0 +1,10 @@
+*.mod
+*.o
+*.points
+*.confidence
+*ev.dat
+*hist1D
+*equal_weights.dat
+*stokes_map
+*stokes_map_hr
+
