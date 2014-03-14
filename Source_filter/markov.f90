@@ -96,7 +96,7 @@ contains
 									
 			if (model(i)%filling_factor < model(i)%filling_factor_range(1) .or. &
 					model(i)%filling_factor > model(i)%filling_factor_range(2)) then				
-				test_physical = .FALSE.								
+				test_physical = .FALSE.				
 				return
 			endif
 						
@@ -379,7 +379,7 @@ contains
     			cycle
 			endif	
 		enddo
-		
+				
 	end subroutine fill_model_uniformvector_new
 	
 !------------------------------------------------------------
@@ -398,7 +398,7 @@ contains
  		physical = test_physical(model)
  		 		 		
 		if (physical) then
-			
+						
 			call synthesize(model,linea,in_observation,in_synthetic)
 						
 			compute_likelihood = 0.d0
@@ -424,7 +424,7 @@ contains
 ! Include normalization of the likelihood and normalization of the priors
 			chi2 = compute_likelihood
 			compute_likelihood = -normalization_loglike - 0.5d0 * compute_likelihood + in_inversion%log_prior_volume_inv
-
+			
 ! Return likelihood=1. This is used for estimating the priors			
 			if (start_or_restart == 2) compute_likelihood = 1.d0
 		endif

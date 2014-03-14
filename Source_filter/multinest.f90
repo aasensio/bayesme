@@ -166,7 +166,7 @@ contains
 		call fill_model_uniformvector_new(inversion,stat,proposed)
 		
 		slhood = compute_likelihood(proposed,linea,Observation,inversion,Stokes_Syn,physical,chi2,1.d0)
-
+		
 		if (slhood > maxlhood) then
 			maxlhood = slhood
 			chi2_min = chi2

@@ -106,10 +106,15 @@ contains
 		observed%sigma_minimum = 1.d10
 		
 		do i = 1, observed%nlambda
-			read(13,*) observed%lambda(i), (observed%stokes(j,i),j=1,4), (observed%sigma(j,i),j=1,4)
-		enddo		
+			read(13,*) observed%lambda(i), (observed%stokes(j,i),j=1,4), (observed%sigma(j,i),j=1,4)			
+		enddo
 		close(13)
 		observed%step_lambda = observed%lambda(2)-observed%lambda(1)
+		
+! Avoid problems later when the noise is put to 0 if the Stokes parameters is not used
+		where (observed%sigma == 0.d0)
+			observed%sigma = 1.d-10
+		endwhere
 
 ! Read the position and transmission of the filters
 		call lb(12,1)
@@ -143,6 +148,11 @@ contains
 			read(13,*) filter_profiles%lambda(i), (filter_profiles%transmission(j,i),j=1,filter_profiles%nfilters)
 		enddo
 		close(13)
+		
+! Make sure that they have unit area
+		do i = 1, filter_profiles%nfilters
+			filter_profiles%transmission(i,:) = filter_profiles%transmission(i,:) / int_tabulated(filter_profiles%lambda, filter_profiles%transmission(i,:))			
+		enddo
 
 ! Read the file with the spectral PSF
 		using_instrumental_profile = .FALSE.

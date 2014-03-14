@@ -9,7 +9,7 @@ NESTED_INC = NESTED
 LAPACK_LIB = LAPACK
 #OPTIONS_MPI = -DMPI
 
-LIBS=-L$(NESTED_LIB) -L$(LAPACK_LIB) -lnest3 -llapack_LINUX -lguide -lpthread
+LIBS=-L$(NESTED_LIB) -L$(LAPACK_LIB) -lnest3 -llapack_LINUX
 
 .SUFFIXES: .f .o
 
@@ -18,7 +18,7 @@ LIBS=-L$(NESTED_LIB) -L$(LAPACK_LIB) -lnest3 -llapack_LINUX -lguide -lpthread
 
 # GFortran
 COMPILER = gfortran
-OPTIONS = -c -frecord-marker=4 -ffree-line-length-none
+OPTIONS = -c -frecord-marker=4 -ffree-line-length-none -O3
 #-fbacktrace -g
 
 OBJECTS = vars.o maths.o read_config.o atomic.o hyperfine.o chain_analysis.o mcmc.o \
